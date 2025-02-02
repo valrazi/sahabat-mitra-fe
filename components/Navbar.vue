@@ -489,8 +489,12 @@ watch(() => loginModal.value, () => {
             <div class="w-full flex justify-center items-center gap-x-12">
                 <UButton @click="router.push('/')" variant="ghost"
                     class="bg-white text-primary hover:bg-primary hover:text-white">Home</UButton>
-                <MoleculesNavCategory />
-                <MoleculesNavBrand />
+                <!-- <MoleculesNavCategory /> -->
+                <UButton @click="router.push('/category')" variant="ghost"
+                class="bg-white text-primary hover:bg-primary hover:text-white">Category</UButton>
+                <!-- <MoleculesNavBrand /> -->
+                <UButton @click="router.push('/brand')" variant="ghost"
+                class="bg-white text-primary hover:bg-primary hover:text-white">Brand</UButton>
                 <UButton variant="ghost" class="bg-white text-primary hover:bg-primary hover:text-white">Promo</UButton>
                 <UButton variant="ghost" class="bg-white text-primary hover:bg-primary hover:text-white">About Us
                 </UButton>
