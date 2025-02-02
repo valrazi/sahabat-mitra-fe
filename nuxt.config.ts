@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      apiBase: btoa(process.env.NUXT_API_BASE_URL || '')
+      apiBase: process.env.NUXT_API_BASE_URL || ''
     }
   },
   compatibilityDate: '2024-11-01',
