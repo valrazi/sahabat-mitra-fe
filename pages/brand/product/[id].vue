@@ -38,62 +38,62 @@ const detailProduct = (id: string) => {
 }
 
 const addWishlist = async (id: string) => {
-    if(!accessToken.value) {
+    if (!accessToken.value) {
         useSwal()
-        .fire({
-            icon: 'warning',
-            title: 'Please Login First'
-        })
+            .fire({
+                icon: 'warning',
+                title: 'Please Login First'
+            })
     }
     const data = await $fetch<Response<any>>(`${apiBase}/wishlist`, {
         method: 'POST',
         headers: {
-            Authorization : `Bearer ${accessToken.value}`
+            Authorization: `Bearer ${accessToken.value}`
         },
         body: {
             productId: id
         }
     })
-    if(!data.error) {
+    if (!data.error) {
         useSwal()
-        .fire({
-            title: `Success`,
-            icon: 'success'
-        })
-        .then(async () => {
-           await execute()
-        })
+            .fire({
+                title: `Success`,
+                icon: 'success'
+            })
+            .then(async () => {
+                await execute()
+            })
     }
 }
 
-const removeWishlist = async(id: string) => {
+const removeWishlist = async (id: string) => {
     useSwal()
-    .fire({
-        title: `Remove Wishlist?`,
-        text: `Action can't be undone`,
-        showCancelButton: true,
-        icon: 'question'
-    })
-    .then(async (res) => {
-        if(res.isConfirmed) {
-            const data = await $fetch<Response<any>>(`${apiBase}/wishlist/${id}`, {
-                method: 'delete',
-                headers: {
-                    Authorization: `Bearer ${accessToken.value}`
+        .fire({
+            title: `Remove Wishlist?`,
+            text: `Action can't be undone`,
+            showCancelButton: true,
+            icon: 'question'
+        })
+        .then(async (res) => {
+            if (res.isConfirmed) {
+                const data = await $fetch<Response<any>>(`${apiBase}/wishlist/${id}`, {
+                    method: 'delete',
+                    headers: {
+                        Authorization: `Bearer ${accessToken.value}`
+                    }
+                })
+                if (!data.error) {
+                    useSwal()
+                        .fire({
+                            title: `Success`,
+                            icon: 'success'
+                        })
+                        .then(async () => {
+                            await execute()
+                        })
                 }
-            })
-            if(!data.error) {
-                useSwal()
-                .fire({
-                    title: `Success`,
-                    icon: 'success'
-                })
-                .then(async () => {
-                    await execute()
-                })
             }
-        }
-    })
+        })
 }
 
 watch(() => productsData.value, () => {

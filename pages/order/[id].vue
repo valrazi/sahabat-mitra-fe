@@ -47,7 +47,7 @@ onMounted(() => {
 
         <div class="w-full flex justify-end mb-[30px]">
             <UButton class="bg-secondary hover:bg-secondary">
-                <ULink type="button" target="_blank" :to="`/order/print?id=${orderData.id}`">Print Invoice</ULink>
+                <ULink type="button" target="_blank" :to="`/order/print/${orderData.id}`">Print Invoice</ULink>
             </UButton>
         </div>
 

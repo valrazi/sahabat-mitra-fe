@@ -3,7 +3,16 @@ import type { BrandResponse } from '~/types/brand';
 import type { CategoryResponse } from '~/types/category';
 import type { IMeta, Response } from '~/types/common';
 import type { Brand, Category } from '~/types/product';
-
+useHead({
+  title: 'Teknik Abadi - Best Electronics Store',
+  meta: [
+    { name: 'description', content: 'Find the best electronics, gadgets, and home appliances at Teknik Abadi.' },
+    { property: 'og:title', content: 'Teknik Abadi - Best Electronics Store' },
+    { property: 'og:description', content: 'Find the best electronics, gadgets, and home appliances at Teknik Abadi.' },
+    { property: 'og:image', content: '/favicon.png' },
+    { property: 'og:url', content: 'https://teknikabadi.com' }
+  ]
+});
 const router = useRouter()
 const apiBase = useRuntimeConfig().public.apiBase;
 const { data: categoriesData, error: categoriesError } = await useFetch<Response<{meta: IMeta; data: {category: Category[]}}>>(`${apiBase}/category`, {

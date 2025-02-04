@@ -157,6 +157,7 @@ const orderPrice = computed(() => {
 })
 
 const orderNote = ref<string>('')
+const orderMethpd = ref<'delivery'|'pickup'|'internalCourier'>('delivery')// TODO
 const checkout = async () => {
     if (!selectedAddress.value || !selectedDelivery.value || !selectedFile.value) {
         useSwal()
@@ -182,10 +183,11 @@ const checkout = async () => {
                 body: {
                     addressId: selectedAddress.value.id,
                     cartId: cart.value!.id,
-                    courierCompany: selectedDelivery.value.company,
-                    courierType: selectedDelivery.value.type,
+                    courierCompany: selectedDelivery.value.company ?? null,
+                    courierType: selectedDelivery.value.type ?? null,
                     orderNote: orderNote.value,
-                    paymentProof: imageData.data.url
+                    paymentProof: imageData.data.url,
+                    orderMethod: orderMethpd.value
                 }
             })
             if(data.data) {

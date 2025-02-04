@@ -15,6 +15,21 @@ const { data: productData, error: productError } = await useFetch<DetailProductR
     key: 'product-detail-data',
 });
 
+watchEffect(() => {
+  if (productData.value) {
+    useHead({
+      title: `${productData.value.data.name} - Buy Now | Teknik Abadi`,
+      meta: [
+        { name: 'description', content: productData.value.data.description },
+        { property: 'og:title', content: productData.value.data.name },
+        { property: 'og:description', content: productData.value.data.description },
+        { property: 'og:image', content: productData.value.data.thumbnail },
+        { property: 'og:url', content: `https://teknikabadi.com/product/detail/${productData.value.data.id}` }
+      ]
+    });
+  }
+});
+
 const price = ref(0)
 const stock = ref<number>(0)
 if (productData.value) {

@@ -125,6 +125,7 @@ const uploadImage = async () => {
         alert('An unexpected error occurred');
     }
 }
+const orderMethod = ref<'delivery'|'pickup'|'internalCourier'>('delivery')
 const checkoutQuotations = async () => {
     uploadImage().then(async (res) => {
         console.log({res})
@@ -137,10 +138,11 @@ const checkoutQuotations = async () => {
                 proceedCartItems: quotationData.value?.cart.cartItem.filter((i) => i.proceedOrder).map((i) => i.id),
                 quotationId: quotationData.value?.id,
                 addressId: selectedAddress.value?.id,
-                courierCompany: selectedDelivery.value?.company,
-                courierType: selectedDelivery.value?.type,
+                courierCompany: selectedDelivery.value?.company ?? null,
+                courierType: selectedDelivery.value?.type ?? null,
                 orderNote: "",
-                paymentProof: res
+                paymentProof: res,
+                orderMethod: orderMethod.value
             }
         })
     })
@@ -164,7 +166,7 @@ const checkoutQuotations = async () => {
                     <h1>Expired Date: {{ dayjs(quotationData?.expiredAt).format('DD MMM YYYY') }}</h1>
                 </div>
                 <UButton class="bg-secondary hover:bg-secondary">
-                    <ULink type="button" target="_blank" :to="`/quotation/print?id=${quotationData?.id}`">Print</ULink>
+                    <ULink type="button" target="_blank" :to="`/quotation/print/${quotationData?.id}`">Print</ULink>
                 </UButton>
             </div>
             <div class="w-full my-[30px] p-4 bg-gray-100 rounded-lg" v-if="quotationData?.quoteStatus == 'OPEN' && addToOrder">
