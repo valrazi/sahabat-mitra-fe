@@ -4,6 +4,7 @@ definePageMeta({
 })
 import { z } from 'zod'
 import type { FormError, FormSubmitEvent } from '#ui/types'
+import type { Response } from '~/types/common'
 
 const schema = z.object({
     fullName: z.string(),
@@ -12,7 +13,7 @@ const schema = z.object({
     npwp: z.string()
 })
 type Schema = z.output<typeof schema>
-const { user } = storeToRefs(useUserStore())
+const { user, accessToken } = storeToRefs(useUserStore())
 const state = reactive({
     email: user.value?.email,
     fullName: user.value?.customer.name ?? '',
@@ -22,13 +23,42 @@ const state = reactive({
 const validate = (state: any): FormError[] => {
   const errors = []
   if (!state.email) errors.push({ path: 'email', message: 'Required' })
-  if (!state.fullName) errors.push({ path: 'fullName', message: 'Required' })
   if (!state.phoneNumber) errors.push({ path: 'phoneNumber', message: 'Required' })
-  if (!state.npwp) errors.push({ path: 'npwp', message: 'Required' })
   return errors
 }
+
+const apiBase = useRuntimeConfig().public.apiBase;
+
+const router = useRouter()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    
+    const data = await $fetch<Response<Customer>>(`${apiBase}/customer/information`, {
+        method: 'put',
+        body: {
+            phoneNumber: event.data.phoneNumber,
+            npwp: event.data.npwp,
+            name: event.data.fullName
+        },
+        headers: {
+            Authorization : `Bearer ${accessToken.value}`
+        }
+    })
+    if(!data.error) {
+        user.value!.customer = data.data
+        useSwal()
+        .fire({
+            icon: 'success',
+            title: 'Succes Update Information'
+        })
+        .then(() => {
+            router.push('/account')
+        })
+    }else {
+        useSwal()
+        .fire({
+            icon: 'error',
+            title: 'Failed Update Information'
+        })
+    }
 }
 </script>
 
@@ -46,7 +76,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 </UFormGroup>
                 
                 <UFormGroup label="Email" name="email">
-                    <UInput v-model="state.email" />
+                    <UInput v-model="state.email" disabled/>
                 </UFormGroup>
 
                 <UFormGroup label="Phone Number" name="phoneNumber">

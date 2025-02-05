@@ -17,10 +17,8 @@ const { user, accessToken } = storeToRefs(useUserStore())
 const items = [
     [
         {
-            label: user.value?.email ?? '',
-            avatar: {
-                src: 'https://avatars.githubusercontent.com/u/739984?v=4'
-            },
+            label: 'Account Setting',
+            icon: 'i-heroicons-cog-6-tooth',
             click: () => {
                 router.push('/account')
             }
@@ -165,6 +163,15 @@ const loginUser = async () => {
 
 
 const initQuotation = async () => {
+    if(!user.value?.customer.name) {
+        useSwal()
+        .fire({
+            icon: 'warning',
+            title: 'Warning',
+            text: 'Please Fill Your Full Name in Account Setting'
+        })
+        return
+    }
     useSwal()
         .fire({
             icon: 'question',
