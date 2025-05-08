@@ -4,9 +4,9 @@ import type { LoginResponse, UserDetailResponse } from '~/types/auth';
 import type { OFetchError } from '~/types/common';
 const passwordVisible = ref<boolean>(false)
 const payload = ref({
-    email: 'axa2@example.com',
-    phoneNumber: '0812',
-    password: 'test',
+    email: '',
+    phoneNumber: '',
+    password: '',
     company_name: '',
     company_type: ''
 })
