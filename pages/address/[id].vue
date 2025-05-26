@@ -33,8 +33,8 @@ const state = reactive({
   contactPhone: '',
   streetAddress: '',
   zipcode: '',
-  latitude: 0,
-  longitude: 0,
+  latitude: -6.175372,
+  longitude: 106.827194,
   note: ''
 })
 
@@ -56,6 +56,7 @@ const getLatLong = () => {
     state.latitude = data.coords.latitude
     state.longitude = data.coords.longitude
   })
+  console.log({state});
 }
 
 const addData = async () => {
@@ -135,7 +136,7 @@ const updateData = async () => {
 }
 
 const onSubmit = () => {
-  if(!isEdit.value) addData()
+  if (!isEdit.value) addData()
   else updateData()
 }
 
@@ -146,8 +147,8 @@ const fetchData = async () => {
       Authorization: `Bearer ${accessToken.value}`
     }
   })
-  if(!data.error) {
-    const {contactName, contactPhone, latitude, longitude, name, note,streetAddress,zipcode} = data.data
+  if (!data.error) {
+    const { contactName, contactPhone, latitude, longitude, name, note, streetAddress, zipcode } = data.data
     state.contactName = contactName
     state.contactPhone = contactPhone
     state.latitude = latitude
@@ -158,10 +159,21 @@ const fetchData = async () => {
     state.zipcode = zipcode
   }
 }
+const zoom = ref(15)
+function onMarkerDragEnd(e: any) {
+  const { lat, lng } = e.target.getLatLng()
+  console.log('Drag end:', lat, lng)
+  state.latitude = lat
+  state.longitude = lng
+}
 
+function onMarkerDrag(e: any) {
+  const { lat, lng } = e.target.getLatLng()
+  console.log('Dragging:', lat, lng)
+}
 onMounted(() => {
   getLatLong()
-  if(isEdit.value) {
+  if (isEdit.value) {
     fetchData()
   }
 })
@@ -199,6 +211,15 @@ onMounted(() => {
           <UInput v-model="state.note" placeholder="ex: Red House with White Gate" />
         </UFormGroup>
 
+        <div class="w-full h-56">
+            <LMap ref="map" :zoom="zoom" :center="[state.latitude, state.longitude]" :use-global-leaflet="false">
+              <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
+                layer-type="base" name="OpenStreetMap" />
+
+                <LMarker :lat-lng="[state.latitude, state.longitude]" draggable  @drag="onMarkerDrag" @dragend="onMarkerDragEnd" />
+            </LMap>
+        </div>
         <UButton type="submit">
           Submit
         </UButton>

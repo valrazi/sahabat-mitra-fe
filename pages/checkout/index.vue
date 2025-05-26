@@ -215,6 +215,9 @@ const checkout = async () => {
         }
     }
 }
+const changeAddress = () => {
+    router.push('/account')
+}
 onMounted(async () => {
     await fetchAddress()
     await fetchShipping()
@@ -235,7 +238,7 @@ onMounted(async () => {
                         </div>
                     </div>
                     <div class="w-1/4 flex justify-end items-center px-1">
-                        <UButton class="bg-secondary hover:bg-secondary">Change Address</UButton>
+                        <UButton @click="changeAddress" class="bg-secondary hover:bg-secondary">Change Address</UButton>
                     </div>
                 </div>
 

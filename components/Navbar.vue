@@ -29,6 +29,7 @@ const items = [
             click: () => {
                 userStore.clearUser()
                 cartStore.removeCart()
+                router.push('/')
             }
         }
     ]
@@ -57,30 +58,42 @@ const loadCart = async () => {
 }
 
 const changeQuantity = async (item: CartItem, type: 'min' | 'plus') => {
+    const tempQty = item.quantity
     if (type == 'min' && item.quantity > 1) {
         item.quantity -= 1
     } else if (type == 'plus') {
         item.quantity += 1
     }
-    const data = await $fetch<CartResponse>(`${apiBase}/cart/${cart.value!.id}/items/${item.id}`, {
-        method: 'PUT',
-        body: {
-            cartId: cart.value!.id,
-            "productId": item.productId,
-            "productVariantId": item.productVariantId,
-            "productVariantTypeId": item.productVariantTypeId,
-            "quantity": item.quantity,
-            "cartItemId": item.id
-        },
-        headers: {
-            Authorization: `Bearer ${accessToken.value}`
-        }
-    })
-    cartStore.setCart(data.data)
-    cart.value!.cartItem = data.data.cartItem.map((i) => {
-        i.tempQty = i.quantity
-        return i
-    })
+    try {
+        const data = await $fetch<CartResponse>(`${apiBase}/cart/${cart.value!.id}/items/${item.id}`, {
+            method: 'PUT',
+            body: {
+                cartId: cart.value!.id,
+                "productId": item.productId,
+                "productVariantId": item.productVariantId,
+                "productVariantTypeId": item.productVariantTypeId,
+                "quantity": item.quantity,
+                "cartItemId": item.id
+            },
+            headers: {
+                Authorization: `Bearer ${accessToken.value}`
+            }
+        })
+        console.log(data.data);
+        console.log('triggered');
+        cartStore.setCart(data.data)
+        cart.value!.cartItem = data.data.cartItem.map((i) => {
+            i.tempQty = i.quantity
+            return i
+        })
+    } catch (error) {
+        item.quantity = tempQty
+        useSwal()
+            .fire({
+                icon: 'warning',
+                title: 'Stock Not Available'
+            })
+    }
 }
 
 const deleteCartItem = async (item: CartItem) => {
@@ -163,13 +176,13 @@ const loginUser = async () => {
 
 
 const initQuotation = async () => {
-    if(!user.value?.customer.name) {
+    if (!user.value?.customer.name) {
         useSwal()
-        .fire({
-            icon: 'warning',
-            title: 'Warning',
-            text: 'Please Fill Your Full Name in Account Setting'
-        })
+            .fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Please Fill Your Full Name in Account Setting'
+            })
         return
     }
     useSwal()
@@ -231,7 +244,7 @@ const fetchProduct = async () => {
         if (data.data.data.product) {
             productData.value = data.data.data.product
         }
-    }else {
+    } else {
         productData.value = []
     }
 }
@@ -243,17 +256,17 @@ const detailProduct = (id: string) => {
 const dropdownRef = ref<HTMLElement | null>(null);
 
 const handleClickOutside = (event: MouseEvent) => {
-  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
-    productData.value = []; // Close dropdown when clicking outside
-  }
+    if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+        productData.value = []; // Close dropdown when clicking outside
+    }
 };
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("click", handleClickOutside);
 });
 
 watch(() => loginModal.value, () => {
@@ -498,10 +511,10 @@ watch(() => loginModal.value, () => {
                     class="bg-white text-primary hover:bg-primary hover:text-white">Home</UButton>
                 <!-- <MoleculesNavCategory /> -->
                 <UButton @click="router.push('/category')" variant="ghost"
-                class="bg-white text-primary hover:bg-primary hover:text-white">Category</UButton>
+                    class="bg-white text-primary hover:bg-primary hover:text-white">Category</UButton>
                 <!-- <MoleculesNavBrand /> -->
                 <UButton @click="router.push('/brand')" variant="ghost"
-                class="bg-white text-primary hover:bg-primary hover:text-white">Brand</UButton>
+                    class="bg-white text-primary hover:bg-primary hover:text-white">Brand</UButton>
                 <UButton variant="ghost" class="bg-white text-primary hover:bg-primary hover:text-white">Promo</UButton>
                 <UButton variant="ghost" class="bg-white text-primary hover:bg-primary hover:text-white">About Us
                 </UButton>
