@@ -16,18 +16,18 @@ const { data: productData, error: productError } = await useFetch<DetailProductR
 });
 
 watchEffect(() => {
-  if (productData.value) {
-    useHead({
-      title: `${productData.value.data.name} - Buy Now | Teknik Abadi`,
-      meta: [
-        { name: 'description', content: productData.value.data.description },
-        { property: 'og:title', content: productData.value.data.name },
-        { property: 'og:description', content: productData.value.data.description },
-        { property: 'og:image', content: productData.value.data.thumbnail },
-        { property: 'og:url', content: `https://teknikabadi.com/product/detail/${productData.value.data.id}` }
-      ]
-    });
-  }
+    if (productData.value) {
+        useHead({
+            title: `${productData.value.data.name} - Buy Now | Teknik Abadi`,
+            meta: [
+                { name: 'description', content: productData.value.data.description },
+                { property: 'og:title', content: productData.value.data.name },
+                { property: 'og:description', content: productData.value.data.description },
+                { property: 'og:image', content: productData.value.data.thumbnail },
+                { property: 'og:url', content: `https://teknikabadi.com/product/detail/${productData.value.data.id}` }
+            ]
+        });
+    }
 });
 
 const price = ref(0)
@@ -109,13 +109,13 @@ const addQuantity = () => {
 }
 
 const initCart = async () => {
-    if(!accessToken.value) {
+    if (!accessToken.value) {
         useSwal()
-        .fire({
-            icon: 'warning',
-            text: 'Please Login First',
-            title: 'Warning'
-        })
+            .fire({
+                icon: 'warning',
+                text: 'Please Login First',
+                title: 'Warning'
+            })
         return
     }
     const { data } = await useFetch<CartResponse>(`${apiBase}/cart`, {
@@ -182,19 +182,24 @@ const gotoWhatsapp = () => {
                 <h2 class="text-2xl mb-[25px]">Rp. {{ price }}</h2>
                 <div class="mb-[30px]" v-if="productData.data.productVariant.length">
                     <h1 class="mb-[14px] text-base font-bold">Variant Product</h1>
-                    <div :class="{ 'bg-primary text-white': payloadProduct.productVariantId == v.id }"
-                        class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeVariant(v)"
-                        v-for="v in productData.data.productVariant">
-                        <h1 class="text-sm">{{ v.name }}</h1>
+                    <div class="w-full flex gap-4 p-4">
+                        <div :class="{ 'bg-primary text-white': payloadProduct.productVariantId == v.id }"
+                            class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeVariant(v)"
+                            v-for="v in productData.data.productVariant">
+                            <h1 class="text-sm">{{ v.name }}</h1>
+                        </div>
                     </div>
                 </div>
 
                 <div class="" v-if="listProductVariantType.length">
                     <h1 class="mb-[14px] text-base font-bold">Type Product</h1>
-                    <div :class="{ 'bg-primary text-white': payloadProduct.productVariantTypeId == t.id }"
-                        class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
-                        v-for="t in listProductVariantType">
-                        <h1 class="text-sm">{{ t.partNumber }}</h1>
+
+                    <div class="w-full flex gap-4 p-4">
+                        <div :class="{ 'bg-primary text-white': payloadProduct.productVariantTypeId == t.id }"
+                            class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
+                            v-for="t in listProductVariantType">
+                            <h1 class="text-sm"> {{ `${t.name} - ${t.partNumber}` }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
