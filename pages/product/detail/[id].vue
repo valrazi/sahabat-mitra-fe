@@ -168,7 +168,7 @@ const gotoWhatsapp = () => {
 }
 </script>
 <template>
-    <div class="w-full py-[50px] px-[131px] flex flex-col dark:bg-white" v-if="productData">
+    <div class="w-full py-[50px] px-[131px] flex flex-col" v-if="productData">
         <h1 class="text-xl font-bold mb-[35px]">PRODUCT DETAILS</h1>
         <div class="flex w-full">
             <div class="flex flex-col max-w-[300px] mr-[62px]">

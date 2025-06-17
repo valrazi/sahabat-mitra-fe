@@ -8,7 +8,7 @@ const route = useRoute()
             <div class="loader"></div>
         </div>
         <Navbar />
-        <div class="w-full flex gap-x-[50px] dark:bg-white">
+        <div class="w-full flex gap-x-[50px]">
             <aside class="pl-[112px] w-[30%] py-[61px]" v-if="route.meta.profile">
                 <div class="w- border-2 flex flex-col">
                     <RouterLink :to="'/account'" :active-class="'bg-secondary text-white'" class="w-full p-[25px] flex gap-x-[25px] text-base items-center">
