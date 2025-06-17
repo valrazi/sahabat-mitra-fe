@@ -182,7 +182,7 @@ const gotoWhatsapp = () => {
                 <h2 class="text-2xl mb-[25px]">Rp. {{ price }}</h2>
                 <div class="mb-[30px]" v-if="productData.data.productVariant.length">
                     <h1 class="mb-[14px] text-base font-bold">Variant Product</h1>
-                    <div class="w-full flex gap-4 p-4">
+                    <div class="w-full flex gap-4 p-4 flex-wrap">
                         <div :class="{ 'bg-primary text-white': payloadProduct.productVariantId == v.id }"
                             class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeVariant(v)"
                             v-for="v in productData.data.productVariant">
@@ -194,7 +194,7 @@ const gotoWhatsapp = () => {
                 <div class="" v-if="listProductVariantType.length">
                     <h1 class="mb-[14px] text-base font-bold">Type Product</h1>
 
-                    <div class="w-full flex gap-4 p-4">
+                    <div class="w-full flex gap-4 p-4 flex-wrap">
                         <div :class="{ 'bg-primary text-white': payloadProduct.productVariantTypeId == t.id }"
                             class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
                             v-for="t in listProductVariantType">
