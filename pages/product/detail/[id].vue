@@ -15,8 +15,10 @@ const { data: productData, error: productError } = await useFetch<DetailProductR
     key: 'product-detail-data',
 });
 
+const productName = ref<string>()
 watchEffect(() => {
     if (productData.value) {
+        productName.value = productData.value.data.name
         useHead({
             title: `${productData.value.data.name} - Buy Now | Teknik Abadi`,
             meta: [
@@ -61,6 +63,7 @@ const changeVariant = (v: ProductVariant) => {
     payloadProduct.value.productVariantTypeId = ''
     price.value = productData.value!.data.price.webPriceIncPpn
     payloadProduct.value.quantity = 1
+    productName.value = v.description
     if (v.id == payloadProduct.value.productVariantId) {
         payloadProduct.value.productVariantId = ''
         listProductVariantType.value = []
@@ -78,8 +81,10 @@ const changeVariant = (v: ProductVariant) => {
     }
 }
 
+
 const changeType = (t: ProductVariantType) => {
     payloadProduct.value.quantity = 1
+    productName.value = t.description
     if (t.id == payloadProduct.value.productVariantTypeId) {
         payloadProduct.value.productVariantTypeId = ''
         price.value = productData.value!.data.price.webPriceIncPpn
@@ -198,7 +203,7 @@ const gotoWhatsapp = () => {
                         <div :class="{ 'bg-primary text-white': payloadProduct.productVariantTypeId == t.id }"
                             class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
                             v-for="t in listProductVariantType">
-                            <h1 class="text-sm"> {{ `${t.name} - ${t.partNumber}` }}</h1>
+                            <h1 class="text-sm"> {{ t.name  }}</h1>
                         </div>
                     </div>
                 </div>
