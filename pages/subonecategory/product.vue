@@ -130,7 +130,7 @@ watch(() => page.value, async () => {
                     </div>
                     <div class="w-full flex flex-col gap-[7px] my-[8px]" v-if="p.price">
                         <div class="w-full flex gap-[11px] justify-center items-center">
-                            <h1 class="line-through text-sm text-primary">Rp. {{ p.price.basic }}</h1>
+                            <h1 v-if="p.brand.name == 'Schneider'" class="line-through text-sm text-primary">Rp. {{ p.price.basic }}</h1>
                             <UBadge color="primary" variant="soft">{{ Math.floor(p.price.wabDiscountPercentage) }}%</UBadge>
                         </div>
                     </div>
