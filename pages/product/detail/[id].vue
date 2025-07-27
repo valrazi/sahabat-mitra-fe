@@ -34,6 +34,14 @@ watchEffect(() => {
 
 const price = ref(0)
 const stock = ref<number>(0)
+const selectedProduct = ref({
+    code: '',
+    name: '',
+    description: '',
+    type: '',
+    variant: '',
+    brand: ''
+})
 if (productData.value) {
     price.value = productData.value.data.price.webPriceIncPpn
     if (productData.value.data.stockSummaries && productData.value.data.stockSummaries.length) {
@@ -64,6 +72,17 @@ const changeVariant = (v: ProductVariant) => {
     price.value = productData.value!.data.price.webPriceIncPpn
     payloadProduct.value.quantity = 1
     productName.value = v.description
+    if(!v.productVariantType.length) {
+        selectedProduct.value.code = v.sku
+        selectedProduct.value.name = v.name
+        selectedProduct.value.description = v.description
+        selectedProduct.value.brand = productData.value?.data.brand.name ?? 'N/A'
+    } else {
+        selectedProduct.value.code = ''
+        selectedProduct.value.name = ''
+        selectedProduct.value.description = ''
+        selectedProduct.value.brand = ''
+    }
     if (v.id == payloadProduct.value.productVariantId) {
         payloadProduct.value.productVariantId = ''
         listProductVariantType.value = []
@@ -85,6 +104,10 @@ const changeVariant = (v: ProductVariant) => {
 const changeType = (t: ProductVariantType) => {
     payloadProduct.value.quantity = 1
     productName.value = t.description
+    selectedProduct.value.code = t.sku
+    selectedProduct.value.name = t.name
+    selectedProduct.value.description = t.description
+    selectedProduct.value.brand = productData.value?.data.brand.name ?? 'N/A'
     if (t.id == payloadProduct.value.productVariantTypeId) {
         payloadProduct.value.productVariantTypeId = ''
         price.value = productData.value!.data.price.webPriceIncPpn
@@ -179,32 +202,66 @@ const gotoWhatsapp = () => {
             <div class="flex flex-col max-w-[300px] mr-[62px]">
                 <img :src="productData.data.thumbnail" alt=""
                     class="w-[200px] flex-shrink-0 mb-[44px] shadow-lg border rounded-sm">
-                <UAccordion color="primary" variant="ghost" size="sm"
-                    :items="[{ label: 'Description', content: productData.data.description }]" />
+                <!-- <UAccordion color="primary" variant="ghost" size="sm"
+                    :items="[{ label: 'Description', content: productData.data.description }]" /> -->
             </div>
             <div class="flex flex-col min-w-[50%] max-w-[50%] flex-wrap mr-[50px]">
                 <h1 class="text-xl font-bold">{{ productData.data.name ?? productData.data.partNumber }}</h1>
                 <h2 class="text-2xl mb-[25px]">Rp. {{ price }}</h2>
-                <div class="mb-[30px]" v-if="productData.data.productVariant.length">
-                    <h1 class="mb-[14px] text-base font-bold">Type Product</h1>
+
+                <div class="mb-[20px] flex items-center w-full border-b-2 border-b-gray-100 gap-x-4" v-if="productData.data.productVariant.length">
+                    <h1 class=" text-base font-bold">Type Product</h1>
+
                     <div class="w-full flex gap-4 p-4 flex-wrap">
                         <div :class="{ 'bg-primary text-white': payloadProduct.productVariantId == v.id }"
-                            class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeVariant(v)"
+                            class="w-fit py-1 px-3 text-center  border rounded-lg" @click="changeVariant(v)"
                             v-for="v in productData.data.productVariant">
                             <h1 class="text-sm">{{ v.name }}</h1>
                         </div>
                     </div>
                 </div>
 
-                <div class="" v-if="listProductVariantType.length">
-                    <h1 class="mb-[14px] text-base font-bold">Variant Product</h1>
+                <div class="mb-[20px] flex w-full items-center border-b-2 border-b-gray-100" v-if="listProductVariantType.length">
+                    <h1 class=" text-base font-bold">Variant Product</h1>
 
                     <div class="w-full flex gap-4 p-4 flex-wrap">
                         <div :class="{ 'bg-primary text-white': payloadProduct.productVariantTypeId == t.id }"
-                            class="w-[140px] py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
+                            class="w-fit py-1 px-3 text-center  border rounded-lg" @click="changeType(t)"
                             v-for="t in listProductVariantType">
                             <h1 class="text-sm"> {{ t.name  }}</h1>
                         </div>
+                    </div>
+                </div>
+
+                <div class="mb-[20px] flex w-full items-center border-b-2 border-b-gray-100 gap-x-5" v-if="selectedProduct.code.length">
+                    <h1 class=" text-base font-bold">Kode Produk</h1>
+
+                    <div class="w-full flex gap-4 p-4 flex-wrap">
+                        <h1 class="text-sm">{{ selectedProduct.code }}</h1>
+                    </div>
+                </div>
+
+                <!-- <div class="mb-[20px] flex w-full items-center border-b-2 border-b-gray-100 gap-x-4" v-if="selectedProduct.name.length">
+                    <h1 class=" text-base font-bold">Nama Produk</h1>
+
+                    <div class="w-full flex gap-4 p-4 flex-wrap">
+                        <h1 class="text-sm">{{ selectedProduct.name }}</h1>
+                    </div>
+                </div> -->
+
+                <div class="mb-[20px] flex w-full items-center border-b-2 border-b-gray-100" v-if="selectedProduct.description.length">
+                    <h1 class=" text-base font-bold">Deskripsi Produk</h1>
+
+                    <div class="w-full flex gap-4 px-3 py-4 flex-wrap">
+                        <h1 class="text-sm">{{ selectedProduct.description }}</h1>
+                    </div>
+                </div>
+
+                <div class="mb-[20px] flex w-full items-center border-b-2 border-b-gray-100 gap-x-4" v-if="selectedProduct.brand.length">
+                    <h1 class=" text-base font-bold">Brand Produk</h1>
+
+                    <div class="w-full flex gap-4 p-4 flex-wrap">
+                        <h1 class="text-sm">{{ selectedProduct.brand }}</h1>
                     </div>
                 </div>
             </div>
