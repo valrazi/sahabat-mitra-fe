@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Query, IMeta, Response } from '~/types/common';
 import type { Brand, Product } from '~/types/product';
+import formatRupiah from '~/utils/strings/rupiahFormatter';
 
 const route = useRoute()
 const router = useRouter()
@@ -149,13 +150,13 @@ watch(() => productsData.value, () => {
                         </div>
                         <div class="w-full flex flex-col gap-[7px] my-[8px]" v-if="p.price">
                             <div class="w-full flex gap-[11px] justify-center items-center">
-                                <h1 class="line-through text-sm text-primary">Rp. {{ p.price.basic }}</h1>
+                                <h1 class="line-through text-sm text-primary">{{ formatRupiah(p.price.basic) }}</h1>
                                 <UBadge color="primary" variant="soft">{{ Math.floor(p.price.wabDiscountPercentage) }}%
                                 </UBadge>
                             </div>
                         </div>
                         <div class="w-full flex justify-center items-center mb-[10px]">
-                            <h1 class="text-base font-bold text-primary" v-if="p.price">Rp. {{ p.price.webPriceIncPpn }}
+                            <h1 class="text-base font-bold text-primary" v-if="p.price">{{ formatRupiah(p.price.webPriceIncPpn) }}
                             </h1>
                         </div>
                         <div class="w-full flex flex-col gap-[7px]">

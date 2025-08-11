@@ -2,6 +2,7 @@
 import type { SubonecategoryDetailResponse } from '~/types/category'
 import type { IMeta, Response } from '~/types/common'
 import type { Product, ProductResponse } from '~/types/product'
+import formatRupiah from '~/utils/strings/rupiahFormatter'
 
 const {accessToken} = storeToRefs(useUserStore())
 
@@ -130,12 +131,12 @@ watch(() => page.value, async () => {
                     </div>
                     <div class="w-full flex flex-col gap-[7px] my-[8px]" v-if="p.price">
                         <div class="w-full flex gap-[11px] justify-center items-center">
-                            <h1 v-if="p.brand.name == 'Schneider'" class="line-through text-sm text-primary">Rp. {{ p.price.basic }}</h1>
+                            <h1 v-if="p.brand.name == 'Schneider'" class="line-through text-sm text-primary">{{ formatRupiah(p.price.basic) }}</h1>
                             <UBadge color="primary" variant="soft">{{ Math.floor(p.price.wabDiscountPercentage) }}%</UBadge>
                         </div>
                     </div>
                     <div class="w-full flex justify-center items-center mb-[10px]">
-                        <h1 class="text-base font-bold text-primary" v-if="p.price">Rp. {{ p.price.webPriceIncPpn }}</h1>
+                        <h1 class="text-base font-bold text-primary" v-if="p.price">{{ formatRupiah(p.price.webPriceIncPpn) }}</h1>
                     </div>
                     <div class="w-full flex flex-col gap-[7px]">
                         <UButton block @click="detailProduct(p.id)">Add to Cart</UButton>

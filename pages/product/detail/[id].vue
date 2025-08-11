@@ -3,6 +3,7 @@ import type { Cart, CartResponse } from '~/types/cart';
 import type { Response } from '~/types/common';
 import { type ProductVariantType, type DetailProductResponse, type ProductVariant } from '~/types/product';
 import type { OFetchError } from '../../../types/common';
+import formatRupiah from '~/utils/strings/rupiahFormatter';
 
 const route = useRoute()
 const id = route.params.id
@@ -44,6 +45,7 @@ const selectedProduct = ref({
 })
 if (productData.value) {
     price.value = productData.value.data.price.webPriceIncPpn
+    selectedProduct.value.name = productData.value.data.name
     if (productData.value.data.stockSummaries && productData.value.data.stockSummaries.length) {
         stock.value = productData.value.data.stockSummaries[0].stock
     }
@@ -74,12 +76,12 @@ const changeVariant = (v: ProductVariant) => {
     productName.value = v.description
     if(!v.productVariantType.length) {
         selectedProduct.value.code = v.sku
-        selectedProduct.value.name = v.name
+        selectedProduct.value.name = v.description
         selectedProduct.value.description = v.description
         selectedProduct.value.brand = productData.value?.data.brand.name ?? 'N/A'
     } else {
         selectedProduct.value.code = ''
-        selectedProduct.value.name = ''
+        // selectedProduct.value.name = ''
         selectedProduct.value.description = ''
         selectedProduct.value.brand = ''
     }
@@ -105,7 +107,7 @@ const changeType = (t: ProductVariantType) => {
     payloadProduct.value.quantity = 1
     productName.value = t.description
     selectedProduct.value.code = t.sku
-    selectedProduct.value.name = t.name
+    selectedProduct.value.name = t.description
     selectedProduct.value.description = t.description
     selectedProduct.value.brand = productData.value?.data.brand.name ?? 'N/A'
     if (t.id == payloadProduct.value.productVariantTypeId) {
@@ -206,8 +208,9 @@ const gotoWhatsapp = () => {
                     :items="[{ label: 'Description', content: productData.data.description }]" /> -->
             </div>
             <div class="flex flex-col min-w-[50%] max-w-[50%] flex-wrap mr-[50px]">
-                <h1 class="text-xl font-bold">{{ productData.data.name ?? productData.data.partNumber }}</h1>
-                <h2 class="text-2xl mb-[25px]">Rp. {{ price }}</h2>
+                <!-- <h1 class="text-xl font-bold">{{ productData.data.name ?? productData.data.partNumber }}</h1> -->
+                <h1 class="text-xl font-bold">{{ selectedProduct.name }}</h1>
+                <h2 class="text-2xl mb-[25px]">{{ formatRupiah(price) }}</h2>
 
                 <div class="mb-[20px] flex items-center w-full border-b-2 border-b-gray-100 gap-x-4" v-if="productData.data.productVariant.length">
                     <h1 class=" text-base font-bold">Type Product</h1>
@@ -270,7 +273,7 @@ const gotoWhatsapp = () => {
                     class="w-[270px] h-[270px] border-2 rounded-lg px-5 py-[35px] relative flex flex-col justify-between">
                     <div>
                         <h1 class="font-bold text-base mb-3">Total</h1>
-                        <h1 class="text-lg">Rp. {{ subtotal }}</h1>
+                        <h1 class="text-lg">{{ formatRupiah(subtotal) }}</h1>
                         <p class="mb-[15px]">Stock: {{ stock }}</p>
                         <div class="w-full flex gap-1">
                             <div class="flex gap-1">
